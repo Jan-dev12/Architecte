@@ -52,6 +52,7 @@ body {
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
+	background-color: #FFFEF8;
 }
 header {
 	display: flex;
@@ -88,7 +89,6 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
 nav li {
 	padding: 0 10px;
@@ -123,8 +123,31 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
 }
+
+.navigation ul
+{
+	justify-content: center;
+	margin: 3em;
+}
+
+.navigation ul li button
+{
+	border: 1px #1D6154 solid;
+	border-radius: 60px;
+	padding: 7px 22px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #1D6154;
+	background-color: #FFFEF8;
+}
+
+.navigation ul li button:hover
+{
+	color: #FFFEF8;
+	background-color: #1D6154;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;

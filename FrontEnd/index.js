@@ -53,9 +53,6 @@ for (let i = 0; i < dataCategorie.length; i++)
     liElement.appendChild(btnElement);
 };
 
-console.log(dataCategorie)
-console.log(data);
-
 //bouton pour trier les projets part catégories
 const boutonTous = document.querySelector(".btn-tous");
 boutonTous.addEventListener("click", function ()
