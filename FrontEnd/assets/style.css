@@ -209,3 +209,37 @@ footer nav ul {
 	margin: 2em
 }
 
+.contenu-login
+{
+	text-align: center;
+	width: 379px;
+	margin: auto;
+}
+
+.formulaire
+{
+	display: flex;
+	flex-direction: column;
+	text-align: justify;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.formulaire input
+{
+	height: 40px;
+}
+
+.formulaire a
+{
+	text-align: center;
+	color: #3D3D3D;
+}
+
+.test
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+}

@@ -101,3 +101,26 @@ boutonHotelsRestaurants.addEventListener("click", function ()
     document.querySelector(".gallery").innerHTML = "";
     genererFiches(filtreHotelRestaurants);
 });
+
+//Pour se déconnecter
+document.getElementById("login").addEventListener("click", () =>
+{
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+})
+
+//Redirige sur login si il n'est pas authentifier et change le texte une fois authentifier
+const token = localStorage.getItem("token");
+const loginbtn = document.getElementById("login");
+
+if (!token)
+{
+    alert(">Accès refusé ! Vous devez être connecté !");
+    window.location.href = "login.html";
+}
+else
+{
+    console.log("Acces autorise");
+    loginbtn.textContent = "logout";
+}
+
