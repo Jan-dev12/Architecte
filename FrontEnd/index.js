@@ -122,5 +122,107 @@ else
 {
     console.log("Acces autorise");
     loginbtn.textContent = "logout";
+    console.log(token);
 }
 
+//Pour afficher le modal quand on click sur le button modifier et qu'on le quitte avec le bouton croix
+const modalContainer = document.querySelector(".modal-container");
+const modalTriggers = document.querySelectorAll(".modal-trigger");
+
+modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+function toggleModal()
+{
+    modalContainer.classList.toggle("active");
+};
+
+//afficher la gallerie dans le modal
+function modalGenererFiches(data)
+{
+    for (let i = 0; i < data.length; i++)
+    {
+        const sectiongallery = document.querySelector(".modal-gallery");
+        
+        const imageElement = document.createElement("img");
+        imageElement.src = data[i].imageUrl;
+        imageElement.classList.add("mode-photo");
+        
+        sectiongallery.appendChild(imageElement);
+
+    };  
+}
+
+modalGenererFiches(data);
+
+//Pour switch entre les différent modal
+const modalFenetre1 = document.querySelector(".modal-fenetre1");
+const modalFenetre2 = document.querySelector(".modal-fenetre2");
+const returnModal = document.querySelectorAll(".return-modal");
+const modalAjoutPhoto = document.querySelector(".modal-ajout-photo");
+
+modalAjoutPhoto.addEventListener("click", function ()
+{
+    modalFenetre2.classList.toggle("active");
+    modalFenetre1.classList.toggle("active");
+})
+
+returnModal.forEach(trigger => trigger.addEventListener("click", togglenextmodal))
+
+function togglenextmodal()
+{
+    modalFenetre1.classList.toggle("active");
+    modalFenetre2.classList.toggle("active");
+}
+
+//permet d'afficher les catégories dans le modal
+for (let i = 0;i < dataCategorie.length; i++)
+    {
+        const selectElement = document.getElementById("categories");
+
+    const optionElement = document.createElement("option");
+    optionElement.setAttribute("value", dataCategorie[i].name);
+    optionElement.innerHTML = dataCategorie[i].name;
+
+    selectElement.appendChild(optionElement);
+}
+
+document.querySelector(".btn-ajout-photo").addEventListener("click", function ()
+{
+    document.getElementById("modal-file").click();
+});
+
+document.getElementById("modal-preview").addEventListener("click", function ()
+{
+    document.getElementById("modal-file").click();
+});
+
+document.getElementById("modal-file").addEventListener("change", function (event)
+{
+    const file = event.target.files[0];
+    // console.log(file.name)
+
+    if (file)
+    {
+        const reader = new FileReader();
+        reader.onload = function (e)
+        {
+            const img = document.getElementById("modal-preview");
+            img.src = e.target.result;
+            img.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+
+    document.querySelector(".contenu-ajout-photo").style.display = "none";
+})
+
+document.getElementById("ajout").addEventListener("submit", async function (event)
+{
+    event.preventDefault();
+    
+    const titre = document.getElementById("titre");
+    const categorie = document.getElementById("categories");
+    
+    
+    console.log(titre.value, categorie.value);
+});
