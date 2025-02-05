@@ -288,7 +288,7 @@ footer nav ul {
 
 .modal-fenetre1
 {
-	display: none;
+	display: block;
 }
 
 .modal-fenetre1.active
@@ -298,7 +298,7 @@ footer nav ul {
 
 .modal-fenetre2
 {
-	display: block;
+	display: none;
 }
 
 .modal-fenetre2.active
@@ -342,6 +342,8 @@ footer nav ul {
 
 .modal-gallery
 {
+	display: flex;
+	flex-wrap: wrap;
 	margin: auto;
 	width: 430px;
 	height: 300px;
@@ -474,4 +476,31 @@ footer nav ul {
 	padding: 0 16px;
 	font-size: 14px;
 	font-weight: 400;
+}
+
+.corbeille
+{
+	position: absolute;
+	top: 7%;
+    left: 65%;
+	width: 17px;
+	height: 17px;
+	background-color: black;
+	color: #FFFFFF;
+	padding: 2px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.corbeille i
+{
+	transform: scale(0.9);
+}
+
+.contenu-photo-modal
+{
+	position: relative;
 }

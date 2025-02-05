@@ -61,14 +61,15 @@
 						<h2>Ajout Photo</h2>
 
 						<form action="" method="post" id="ajout" class="modal-formulaire">
-							
+							<!-- enctype="multipart/form-data" -->
+
 							<div class="contenu-photo">
 
 								<div class="contenu-ajout-photo">
 									<i class="fa-regular fa-image fa-4x icone-ajout-photo"></i>
 
 									<input type="file" id="modal-file" class="modal-preview" accept="images/*" required>
-									<button class="btn-ajout-photo">+ Ajouter photo</button>
+									<button type="button" class="btn-ajout-photo">+ Ajouter photo</button>
 									<p>jpg, png : 4mo max</p>
 
 								</div>
@@ -85,7 +86,7 @@
 							</select>
 
 							<div class="modal-line-ajout-photo"></div>
-							<input class="btn-valider" type="submit" value="Valider">
+							<input class="btn-valider modal-trigger" type="submit" value="Valider">
 						</form>
 						
 					</div>

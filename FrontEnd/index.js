@@ -1,6 +1,6 @@
 // Récupération des données de l'API en JSON pour les Projets
 const reponse = await fetch("http://localhost:5678/api/works");
-const data = await reponse.json();
+let data = await reponse.json();
 
 function genererFiches(data)
 {
@@ -136,23 +136,74 @@ function toggleModal()
     modalContainer.classList.toggle("active");
 };
 
-//afficher la gallerie dans le modal
+//afficher la gallerie dans le modal avec la corbeille
 function modalGenererFiches(data)
 {
     for (let i = 0; i < data.length; i++)
     {
         const sectiongallery = document.querySelector(".modal-gallery");
         
+        const contenuElement = document.createElement("div");
+        contenuElement.classList.add("contenu-photo-modal");
+
         const imageElement = document.createElement("img");
         imageElement.src = data[i].imageUrl;
         imageElement.classList.add("mode-photo");
+        const corbeilleElement = document.createElement("div");
+        corbeilleElement.classList.add("corbeille");
+        corbeilleElement.id = data[i].id;
+        corbeilleElement.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
         
-        sectiongallery.appendChild(imageElement);
+        sectiongallery.appendChild(contenuElement);
+        contenuElement.appendChild(imageElement);
+        contenuElement.appendChild(corbeilleElement);
 
     };  
 }
 
 modalGenererFiches(data);
+
+//Permet de supprimer une photo
+document.addEventListener("click", async function (event)
+{
+    const idCorbeille = event.target.closest(".corbeille");
+
+    if(idCorbeille)
+    {
+        console.log(idCorbeille.id);
+        const reponse = await fetch(`http://localhost:5678/api/works/${idCorbeille.id}`, 
+        {
+            method: "DELETE",
+            headers: {
+                "Accept": "*/*",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response =>
+        {
+            if(response.ok)
+            {
+                data = data.filter(item => item.id !== parseInt(idCorbeille.id));
+
+                document.querySelector(".modal-gallery").innerHTML = "";
+                document.querySelector(".gallery").innerHTML = "";
+
+                genererFiches(data);
+                modalGenererFiches(data);
+            }
+            else
+            {
+                console.error("Erreur lors de la suppression :", reponse.status)
+            }
+        })
+
+        document.querySelector(".modal-gallery").innerHTML = "";
+        document.querySelector(".gallery").innerHTML = "";
+        genererFiches(data);
+        modalGenererFiches(data);
+
+    }
+})
 
 //Pour switch entre les différent modal
 const modalFenetre1 = document.querySelector(".modal-fenetre1");
@@ -180,7 +231,7 @@ for (let i = 0;i < dataCategorie.length; i++)
         const selectElement = document.getElementById("categories");
 
     const optionElement = document.createElement("option");
-    optionElement.setAttribute("value", dataCategorie[i].name);
+    optionElement.setAttribute("value", dataCategorie[i].id);
     optionElement.innerHTML = dataCategorie[i].name;
 
     selectElement.appendChild(optionElement);
@@ -196,13 +247,16 @@ document.getElementById("modal-preview").addEventListener("click", function ()
     document.getElementById("modal-file").click();
 });
 
+let file;
+
+//Pour charger une image et l'afficher sur le modal
 document.getElementById("modal-file").addEventListener("change", function (event)
 {
-    const file = event.target.files[0];
-    // console.log(file.name)
+    file = event.target.files[0];
 
     if (file)
     {
+        console.log(file);
         const reader = new FileReader();
         reader.onload = function (e)
         {
@@ -216,6 +270,7 @@ document.getElementById("modal-file").addEventListener("change", function (event
     document.querySelector(".contenu-ajout-photo").style.display = "none";
 })
 
+//bouton pour envoyer la requette et ajouter un projet
 document.getElementById("ajout").addEventListener("submit", async function (event)
 {
     event.preventDefault();
@@ -223,6 +278,43 @@ document.getElementById("ajout").addEventListener("submit", async function (even
     const titre = document.getElementById("titre");
     const categorie = document.getElementById("categories");
     
+    console.log(titre.value, categorie.value, file.name);
+
+    modalFenetre1.classList.toggle("active");
+    modalFenetre2.classList.toggle("active");
     
-    console.log(titre.value, categorie.value);
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("title", titre.value);
+    formData.append("category", categorie.value);
+    
+    const reponse = await fetch("http://localhost:5678/api/works",
+    {
+        method: "POST",
+        headers: {
+            
+            "Authorization": `Bearer ${token}`,
+        },
+        body: formData
+    })
+    if(reponse.ok)
+    {
+        const newPhoto = await reponse.json();
+
+        data.push(newPhoto);
+        document.querySelector(".gallery").innerHTML = "";
+        document.querySelector(".modal-gallery").innerHTML = "";
+        
+        genererFiches(data);
+        modalGenererFiches(data);
+        document.getElementById("ajout").reset();
+
+        
+    }
+    else
+    {
+        console.error("Erreur lors de la suppression :", reponse.status)
+    }
+    
+    
 });
