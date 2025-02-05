@@ -105,25 +105,45 @@ boutonHotelsRestaurants.addEventListener("click", function ()
 //Pour se déconnecter
 document.getElementById("login").addEventListener("click", () =>
 {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
+    if(token)
+    {
+        localStorage.removeItem("token");
+        window.location.href = "index.html";
+        
+    }
+    else
+    {
+        window.location.href = "login.html";
+    }
 })
 
 //Redirige sur login si il n'est pas authentifier et change le texte une fois authentifier
 const token = localStorage.getItem("token");
 const loginbtn = document.getElementById("login");
+const btnModifier = document.querySelector(".modal-btn");
 
-if (!token)
-{
-    alert(">Accès refusé ! Vous devez être connecté !");
-    window.location.href = "login.html";
-}
-else
+if(token)
 {
     console.log("Acces autorise");
     loginbtn.textContent = "logout";
-    console.log(token);
+    document.querySelector(".modal-btn").style.display = "block";
 }
+else
+{
+    document.querySelector(".modal-btn").style.display = "none";
+
+}
+// if (!token)
+// {
+//     alert(">Accès refusé ! Vous devez être connecté !");
+//     window.location.href = "login.html";
+//     document.querySelector(".modal-btn").style.display = "none";
+// }
+// else
+// {
+//     console.log("Acces autorise");
+//     loginbtn.textContent = "logout";
+// }
 
 //Pour afficher le modal quand on click sur le button modifier et qu'on le quitte avec le bouton croix
 const modalContainer = document.querySelector(".modal-container");
