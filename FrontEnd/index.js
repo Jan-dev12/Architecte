@@ -35,6 +35,7 @@ const ulElement = document.createElement("ul");
 const liElementTous = document.createElement("li");
 liElementTous.classList.add("btn-tous");
 const btnElementTous = document.createElement("button");
+btnElementTous.classList.add("toggles")
 btnElementTous.innerHTML = "Tous";
 
 navElement.appendChild(ulElement);
@@ -46,12 +47,25 @@ for (let i = 0; i < dataCategorie.length; i++)
     const liElement = document.createElement("li");
     liElement.classList.add(`btn-${i}`);
     const btnElement = document.createElement("button");
+    btnElement.classList.add("toggles");
     btnElement.innerHTML = dataCategorie[i].name;
 
     navElement.appendChild(ulElement);
     ulElement.appendChild(liElement);
     liElement.appendChild(btnElement);
 };
+
+//toggles button filtres pour background
+const buttonfiltre = document.querySelectorAll(".toggles");
+buttonfiltre.forEach(button =>
+{
+    button.addEventListener("click", function ()
+    {
+        buttonfiltre.forEach(i => i.classList.remove("active"));
+
+        this.classList.add("active");
+    })
+})
 
 //bouton pour trier les projets part catégories
 const boutonTous = document.querySelector(".btn-tous");
@@ -225,7 +239,7 @@ document.addEventListener("click", async function (event)
     }
 })
 
-//Pour switch entre les différent modal
+//Pour switch entre les différent modal avec la fleche retour
 const modalFenetre1 = document.querySelector(".modal-fenetre1");
 const modalFenetre2 = document.querySelector(".modal-fenetre2");
 const returnModal = document.querySelectorAll(".return-modal");
@@ -295,45 +309,53 @@ document.getElementById("ajout").addEventListener("submit", async function (even
 {
     event.preventDefault();
     
-    const titre = document.getElementById("titre");
-    const categorie = document.getElementById("categories");
-    
-    console.log(titre.value, categorie.value, file.name);
-
-    modalFenetre1.classList.toggle("active");
-    modalFenetre2.classList.toggle("active");
-    
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("title", titre.value);
-    formData.append("category", categorie.value);
-    
-    const reponse = await fetch("http://localhost:5678/api/works",
+    if (!file)
     {
-        method: "POST",
-        headers: {
-            
-            "Authorization": `Bearer ${token}`,
-        },
-        body: formData
-    })
-    if(reponse.ok)
-    {
-        const newPhoto = await reponse.json();
-
-        data.push(newPhoto);
-        document.querySelector(".gallery").innerHTML = "";
-        document.querySelector(".modal-gallery").innerHTML = "";
-        
-        genererFiches(data);
-        modalGenererFiches(data);
-        document.getElementById("ajout").reset();
-
-        
+        alert("Veillez ajoutez une photo !");
     }
     else
     {
-        console.error("Erreur lors de la suppression :", reponse.status)
+
+        const titre = document.getElementById("titre");
+        const categorie = document.getElementById("categories");
+        
+        // console.log(titre.value, categorie.value, file.name);
+        
+        
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("title", titre.value);
+        formData.append("category", categorie.value);
+        
+        const reponse = await fetch("http://localhost:5678/api/works",
+            {
+            method: "POST",
+            headers: {
+                
+                "Authorization": `Bearer ${token}`,
+            },
+            body: formData
+        })
+        if(reponse.ok)
+        {
+            const newPhoto = await reponse.json();
+            modalFenetre1.classList.toggle("active");
+            modalFenetre2.classList.toggle("active");
+            
+            data.push(newPhoto);
+            document.querySelector(".gallery").innerHTML = "";
+            document.querySelector(".modal-gallery").innerHTML = "";
+            
+            genererFiches(data);
+            modalGenererFiches(data);
+            document.getElementById("ajout").reset();
+            console.log("Projet ajouter");
+            
+        }
+        else
+        {
+            console.error("Erreur lors de la suppression :", reponse.status)
+        }
     }
     
     

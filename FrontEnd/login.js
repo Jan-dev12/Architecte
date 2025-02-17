@@ -29,7 +29,11 @@ document.getElementById("login").addEventListener("submit", async function (even
         }
         else
         {
-            alert("Mail ou mot de passe incorrect");
+            const information = document.querySelector(".information");
+            information.style.display = "block";
+            setTimeout(() => {
+                information.style.display = "none";
+            }, 3000);
             form.reset();
         }
 

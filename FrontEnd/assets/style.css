@@ -143,6 +143,12 @@ li:hover {
 	background-color: #FFFEF8;
 }
 
+.navigation ul li button.active
+{
+	background-color: #1D6154;
+	color: #FFFEF8;
+}
+
 .navigation ul li button:hover
 {
 	color: #FFFEF8;
@@ -504,4 +510,11 @@ footer nav ul {
 .contenu-photo-modal
 {
 	position: relative;
+}
+
+.information
+{
+	display: none;
+	text-align: center;
+	color: red;
 }

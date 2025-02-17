@@ -24,7 +24,7 @@
 	</nav>
 </header>
 <main>
-	<section id="introduction">
+	<div id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
 		</figure>
@@ -34,7 +34,7 @@
 			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
-	</section>
+	</div>
 	<section id="portfolio">
 		<div class="mesProjets">
 
@@ -60,7 +60,7 @@
 						<button class="return-modal"><i class="fa-solid fa-arrow-left"></i></button>
 						<h2>Ajout Photo</h2>
 
-						<form action="" method="post" id="ajout" class="modal-formulaire">
+						<form action="#" method="post" id="ajout" class="modal-formulaire">
 							<!-- enctype="multipart/form-data" -->
 
 							<div class="contenu-photo">
@@ -68,17 +68,17 @@
 								<div class="contenu-ajout-photo">
 									<i class="fa-regular fa-image fa-4x icone-ajout-photo"></i>
 
-									<input type="file" id="modal-file" class="modal-preview" accept="images/*" required>
+									<input type="file" id="modal-file" class="modal-preview" accept="images/*">
 									<button type="button" class="btn-ajout-photo">+ Ajouter photo</button>
 									<p>jpg, png : 4mo max</p>
 
 								</div>
 								
-								<img id="modal-preview">
+								<img id="modal-preview" src="https://img.freepik.com/psd-gratuit/image-arriere-plan-transparente-vide_191095-80808.jpg?semt=ais_hybrid" alt="rendu photo telecharger">
 								
 							</div>
 						
-							<label for="title">Titre</label>
+							<label for="titre">Titre</label>
 							<input type="text" name="titre" id="titre" required>
 							<label for="categories">Catégorie</label>
 							<select name="categories" id="categories">
@@ -86,7 +86,7 @@
 							</select>
 
 							<div class="modal-line-ajout-photo"></div>
-							<input class="btn-valider modal-trigger" type="submit" value="Valider">
+							<input class="btn-valider" type="submit" value="Valider">
 						</form>
 						
 					</div>
