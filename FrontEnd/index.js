@@ -29,31 +29,46 @@ const categorie = await fetch("http://localhost:5678/api/categories");
 const dataCategorie = await categorie.json();
 
 const navElement = document.querySelector(".navigation");
-
 const ulElement = document.createElement("ul");
 
-const liElementTous = document.createElement("li");
-liElementTous.classList.add("btn-tous");
-const btnElementTous = document.createElement("button");
-btnElementTous.classList.add("toggles")
-btnElementTous.innerHTML = "Tous";
-
-navElement.appendChild(ulElement);
-ulElement.appendChild(liElementTous);
-liElementTous.appendChild(btnElementTous);
-
-for (let i = 0; i < dataCategorie.length; i++)
+function genererBtn (dataCategorie)
 {
-    const liElement = document.createElement("li");
-    liElement.classList.add(`btn-${i}`);
-    const btnElement = document.createElement("button");
-    btnElement.classList.add("toggles");
-    btnElement.innerHTML = dataCategorie[i].name;
+    const liElementTous = document.createElement("li");
+    liElementTous.classList.add("btn-tous");
+    const btnElementTous = document.createElement("button");
+    btnElementTous.classList.add("toggles");
+    btnElementTous.innerHTML = "Tous";
 
-    navElement.appendChild(ulElement);
-    ulElement.appendChild(liElement);
-    liElement.appendChild(btnElement);
-};
+    btnElementTous.addEventListener("click", function () {
+        document.querySelector(".gallery").innerHTML = "";
+        genererFiches(data); // Affiche tout
+    });
+
+    ulElement.appendChild(liElementTous);
+    liElementTous.appendChild(btnElementTous);
+
+    for (let i = 0; i < dataCategorie.length; i++)
+    {
+        const liElement = document.createElement("li");
+        liElement.classList.add(`btn-${i}`);
+        const btnElement = document.createElement("button");
+        btnElement.classList.add("toggles");
+        btnElement.innerHTML = dataCategorie[i].name;
+
+        btnElement.addEventListener("click", function () {
+            const filtre = data.filter(item => item.categoryId === dataCategorie[i].id);
+
+            document.querySelector(".gallery").innerHTML = "";
+            genererFiches(filtre);
+        });
+
+        navElement.appendChild(ulElement);
+        ulElement.appendChild(liElement);
+        liElement.appendChild(btnElement);
+    };
+}
+
+genererBtn(dataCategorie);
 
 //toggles button filtres pour background
 const buttonfiltre = document.querySelectorAll(".toggles");
@@ -66,55 +81,6 @@ buttonfiltre.forEach(button =>
         this.classList.add("active");
     })
 })
-
-//bouton pour trier les projets part catégories
-const boutonTous = document.querySelector(".btn-tous");
-boutonTous.addEventListener("click", function ()
-{
-    const filtreTous = data.filter(function (data)
-    {
-        return data;
-    });
-    
-    document.querySelector(".gallery").innerHTML = "";
-    genererFiches(filtreTous);
-});
-
-const boutonObjets = document.querySelector(".btn-0");
-boutonObjets.addEventListener("click", function () 
-{
-    const filtreObjets = data.filter(function (data) 
-    {
-        return data.categoryId == 1;
-    });
-
-    document.querySelector(".gallery").innerHTML = "";
-    genererFiches(filtreObjets);
-});
-
-const boutonAppartements = document.querySelector(".btn-1");
-boutonAppartements.addEventListener("click", function () 
-{
-    const filtreAppartements = data.filter(function (data)
-    {
-        return data.categoryId == 2;
-    });
-
-    document.querySelector(".gallery").innerHTML = "";
-    genererFiches(filtreAppartements);
-});
-
-const boutonHotelsRestaurants = document.querySelector(".btn-2");
-boutonHotelsRestaurants.addEventListener("click", function () 
-{
-    const filtreHotelRestaurants = data.filter(function (data)
-    {
-        return data.categoryId == 3
-    });
-    
-    document.querySelector(".gallery").innerHTML = "";
-    genererFiches(filtreHotelRestaurants);
-});
 
 //Pour se déconnecter
 document.getElementById("login").addEventListener("click", () =>
@@ -188,6 +154,48 @@ function modalGenererFiches(data)
         corbeilleElement.id = data[i].id;
         corbeilleElement.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
         
+        //Permet de supprimer une photo
+        corbeilleElement.addEventListener("click", async function (event)
+        {
+            const idCorbeille = event.target.closest(".corbeille");
+
+            if(idCorbeille)
+            {
+                console.log(idCorbeille.id);
+                const reponse = await fetch(`http://localhost:5678/api/works/${idCorbeille.id}`, 
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Accept": "*/*",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response =>
+                {
+                    if(response.ok)
+                    {
+                        data = data.filter(item => item.id !== parseInt(idCorbeille.id));
+
+                        document.querySelector(".modal-gallery").innerHTML = "";
+                        document.querySelector(".gallery").innerHTML = "";
+
+                        genererFiches(data);
+                        modalGenererFiches(data);
+                    }
+                    else
+                    {
+                        console.error("Erreur lors de la suppression :", reponse.status)
+                    }
+                })
+
+                document.querySelector(".modal-gallery").innerHTML = "";
+                document.querySelector(".gallery").innerHTML = "";
+                genererFiches(data);
+                modalGenererFiches(data);
+
+            }
+        })
+
         sectiongallery.appendChild(contenuElement);
         contenuElement.appendChild(imageElement);
         contenuElement.appendChild(corbeilleElement);
@@ -197,47 +205,6 @@ function modalGenererFiches(data)
 
 modalGenererFiches(data);
 
-//Permet de supprimer une photo
-document.addEventListener("click", async function (event)
-{
-    const idCorbeille = event.target.closest(".corbeille");
-
-    if(idCorbeille)
-    {
-        console.log(idCorbeille.id);
-        const reponse = await fetch(`http://localhost:5678/api/works/${idCorbeille.id}`, 
-        {
-            method: "DELETE",
-            headers: {
-                "Accept": "*/*",
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response =>
-        {
-            if(response.ok)
-            {
-                data = data.filter(item => item.id !== parseInt(idCorbeille.id));
-
-                document.querySelector(".modal-gallery").innerHTML = "";
-                document.querySelector(".gallery").innerHTML = "";
-
-                genererFiches(data);
-                modalGenererFiches(data);
-            }
-            else
-            {
-                console.error("Erreur lors de la suppression :", reponse.status)
-            }
-        })
-
-        document.querySelector(".modal-gallery").innerHTML = "";
-        document.querySelector(".gallery").innerHTML = "";
-        genererFiches(data);
-        modalGenererFiches(data);
-
-    }
-})
 
 //Pour switch entre les différent modal avec la fleche retour
 const modalFenetre1 = document.querySelector(".modal-fenetre1");
@@ -290,6 +257,19 @@ document.getElementById("modal-file").addEventListener("change", function (event
 
     if (file)
     {
+        const allowedTypes = ["image/jpeg", "image/png"];
+        const maxSize = 4 * 1024 * 1024; // 4 Mo en octets
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Seuls les fichiers JPEG et PNG sont autorisés.");
+            return;
+        }
+
+        if (file.size > maxSize) {
+            alert("La taille maximale autorisée est de 4 Mo.");
+            return;
+        }
+        
         console.log(file);
         const reader = new FileReader();
         reader.onload = function (e)

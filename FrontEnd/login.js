@@ -34,7 +34,6 @@ document.getElementById("login").addEventListener("submit", async function (even
             setTimeout(() => {
                 information.style.display = "none";
             }, 3000);
-            form.reset();
         }
 
     }
