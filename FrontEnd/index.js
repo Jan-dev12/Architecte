@@ -157,7 +157,6 @@ function modalGenererFiches(data)
         //Permet de supprimer une photo
         corbeilleElement.addEventListener("click", async function (event)
         {
-            const idCorbeille = event.target.closest(".corbeille");
 
             if(idCorbeille)
             {
@@ -340,3 +339,37 @@ document.getElementById("ajout").addEventListener("submit", async function (even
     
     
 });
+
+//Pour activer et désactiver le bouton de validation pour ajouter un nouveau projet
+const form = document.getElementById("ajout");
+const titreInput = document.getElementById("titre");
+const categoriesSelect = document.getElementById("categories");
+const fileInput = document.getElementById("modal-file");
+const submitButton = form.querySelector(".btn-valider");
+
+submitButton.disabled = true;
+submitButton.style.backgroundColor = "gray";
+submitButton.style.cursor = "not-allowed";
+
+function verifierChamps() {
+    const titreOk = titreInput.value !== "";
+    const categorieOk = categoriesSelect.value !== "0";
+    const fileOk = fileInput.files.length > 0;
+
+    if (titreOk && categorieOk && fileOk) 
+    {
+        submitButton.disabled = false;
+        submitButton.style.backgroundColor = "green";
+        submitButton.style.cursor = "pointer";
+    } 
+    else 
+    {
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "gray";
+        submitButton.style.cursor = "not-allowed";
+    }
+}
+
+titreInput.addEventListener("input", verifierChamps);
+categoriesSelect.addEventListener("change", verifierChamps);
+fileInput.addEventListener("change", verifierChamps);
